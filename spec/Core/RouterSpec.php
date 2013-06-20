@@ -62,21 +62,6 @@ class RouterSpec extends ObjectBehavior
         $this->route('/', 'GET')->getAction()->shouldBe('getAction');
     }
 
-    function it_will_let_you_add_namespaces()
-    {
-        $this->addNamespace('Core\Asset')->shouldReturn(NULL);
-        $this->getNamespaces()->shouldBeArray();
-        $this->getNamespaces()->shouldHaveCount(2);
-    }
-
-    function it_will_let_you_remove_namespaces()
-    {
-        $this->addNamespace('Foo\Bar');
-        $this->removeNamespace('Api\Controller');
-        $this->getNamespaces()->shouldBeArray();
-        $this->getNamespaces()->shouldHaveCount(1);
-    }
-
     public function getMatchers()
     {
         return array(

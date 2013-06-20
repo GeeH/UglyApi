@@ -12,9 +12,6 @@ class Router
      * @var Route
      */
     protected $route;
-    protected $namespaces = array(
-        'Api\Controller'
-    );
 
     public function __construct()
     {
@@ -90,33 +87,4 @@ class Router
         return $queryParams;
     }
 
-    /**
-     * Adds a namespace (where to look for controllers)
-     *
-     * @param $namespace
-     */
-    public function addNamespace($namespace)
-    {
-        $this->namespaces = array_merge(array($namespace), $this->namespaces);
-    }
-
-    /**
-     * @return array
-     */
-    public function getNamespaces()
-    {
-        return $this->namespaces;
-    }
-
-    /**
-     * @param $namespace
-     */
-    public function removeNamespace($namespace)
-    {
-        foreach ($this->namespaces as $key => $val) {
-            if ($namespace === $val) {
-                unset($this->namespaces[$key]);
-            }
-        }
-    }
 }

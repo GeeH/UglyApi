@@ -130,10 +130,8 @@ class Bootstrap
      */
     public function getControllerClass(Route $route)
     {
-        foreach ($this->router->getNamespaces() as $namespace) {
-            if (class_exists($namespace . '\\' . $route->getController())) {
-                return $namespace . '\\' . $route->getController();
-            }
+        if ($this->serviceManager->exists($route->getController())) {
+            return $this->serviceManager->get($route->getController());
         }
         return false;
     }

@@ -5,7 +5,6 @@ namespace spec\Core;
 use Core\Assets\IndexController;
 use Core\Bootstrap;
 use Core\Router;
-use Core\ServiceManager;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -72,34 +71,33 @@ class BootstrapSpec extends ObjectBehavior
     function it_will_return_a_valid_controller_class_if_one_exists()
     {
         $router = new Router();
-        $router->addNamespace('Core\Assets');
         $this->setRouter($router);
         $route = $router->route('/', 'GET');
-        $this->getControllerClass($route)->shouldBe('Core\Assets\IndexController');
+        $this->getServiceManager()->set('IndexController', new \Core\Assets\IndexController());
+        $this->getControllerClass($route)->shouldBeAnInstanceOf('Core\Assets\IndexController');
     }
 
     function it_will_return_false_if_a_controller_is_not_found()
     {
         $router = new Router();
-        $router->removeNamespace('Api\Controller');
         $this->setRouter($router);
-        $route = $router->route('/', 'GET');
+        $route = $router->route('/foo', 'GET');
         $this->getControllerClass($route)->shouldBe(false);
     }
 
     function it_will_except_if_init_cant_find_controller()
     {
         $router = new Router();
-        $router->removeNamespace('Api\Controller');
         $this->setRouter($router);
-        $this->shouldThrow('\InvalidArgumentException')->duringInit('/', 'GET');
+        $this->shouldThrow('\InvalidArgumentException')->duringInit('/cock', 'GET');
     }
 
     function it_will_except_if_init_cant_find_action()
     {
         $router = new Router();
-        $router->addNamespace('Core\Assets');
         $this->setRouter($router);
+        $this->getServiceManager()->set('IndexController', 'Core\Assets\IndexController');
+
         $this->shouldThrow('\InvalidArgumentException')->duringInit('/', 'POST');
     }
 
@@ -112,7 +110,7 @@ class BootstrapSpec extends ObjectBehavior
     function it_will_route_and_call_controller_and_action()
     {
         $router = new Router();
-        $router->addNamespace('Core\Assets');
+        $this->getServiceManager()->set('IndexController', 'Core\Assets\IndexController');
         $this->setRouter($router);
         $this->init('/', 'GET')->shouldBeArray();
     }
